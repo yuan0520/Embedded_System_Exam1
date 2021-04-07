@@ -143,10 +143,22 @@ void down_btn_task(){
 }
 
 void sel_btn_task(){
-    if(freq_pos == 0) freq_scale = 0.125;
-    else if(freq_pos == 1) freq_scale = 0.25;
-    else if(freq_pos == 2) freq_scale = 0.5;
-    else freq_scale = 1;
+    if(freq_pos == 0){
+        freq_scale = 0.125;
+        len = 1.0 / (S*freq_scale);
+    } 
+    else if(freq_pos == 1){
+        freq_scale = 0.25;
+        len = 1.0 / (S*freq_scale);
+    } 
+    else if(freq_pos == 2){
+        freq_scale = 0.5;
+        len = 1.0 / (S*freq_scale);
+    } 
+    else{
+        freq_scale = 1;
+        len = 1.0 / (S*freq_scale);
+    } 
     wave_queue.call(generate_wave);
 }
 
