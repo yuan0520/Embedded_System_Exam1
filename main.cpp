@@ -6,9 +6,9 @@ uLCD_4DGL uLCD(D1, D0, D2);
 AnalogOut  aout(D7);
 AnalogIn ain(D13);
 
-DigitalIn btn_up(D6);
-DigitalIn btn_down(D10);
-DigitalIn btn_sel(D3);
+InterruptIn btn_up(D6);
+InterruptIn btn_down(D10);
+InterruptIn btn_sel(D3);
 
 int sample = 1000;
 float ADCdata[1500];
@@ -16,40 +16,44 @@ float ADCdata[1500];
 void menu(int freq_pos){
     uLCD.color(BLACK);
     uLCD.locate(1, 2);
-    uLCD.printf("\n10Hz\n\n");
+    uLCD.printf("\n1/8\n\n");
     uLCD.locate(1, 4);
-    uLCD.printf("\n25Hz\n\n");
+    uLCD.printf("\n1/4\n\n");
     uLCD.locate(1, 6);
-    uLCD.printf("\n50Hz\n\n");
+    uLCD.printf("\n1/2\n\n");
     uLCD.locate(1, 8);
-    uLCD.printf("\n100Hz\n");
+    uLCD.printf("\n1\n");
 
     if(freq_pos == 0){
         uLCD.color(BLUE);
         uLCD.locate(1, 2);
-        uLCD.printf("\n10Hz\n\n");
+        // uLCD.printf("\n10Hz\n\n");
+        uLCD.printf("\n1/8\n\n");
     }
     else if(freq_pos == 1){
         uLCD.color(BLUE);
         uLCD.locate(1, 4);
-        uLCD.printf("\n25Hz\n\n");
+        // uLCD.printf("\n25Hz\n\n");
+        uLCD.printf("\n1/4\n\n");
     }
     else if(freq_pos == 2){
         uLCD.color(BLUE);
         uLCD.locate(1, 6);
-        uLCD.printf("\n50Hz\n\n");
+        // uLCD.printf("\n50Hz\n\n");
+        uLCD.printf("\n1/2\n\n");
     }
     else{
         uLCD.color(BLUE);
         uLCD.locate(1, 8);
-        uLCD.printf("\n100Hz\n\n");
+        // uLCD.printf("\n100Hz\n\n");
+        uLCD.printf("\n1\n\n");
     }
 }
 
 int main(void)
 {
-    int freq_pos = 0; // 0 -> 10Hz, 1 -> 25Hz, 2 => 50Hz, 3 -> 100Hz
-    float freq_scale = 0.1; // default 10Hz
+    int freq_pos = 3; // 0 -> 10Hz, 1 -> 25Hz, 2 => 50Hz, 3 -> 100Hz
+    float freq_scale = 1; // default 100Hz
 
     uLCD.background_color(WHITE);
     uLCD.cls();
@@ -66,7 +70,7 @@ int main(void)
             menu(freq_pos);
         }
         if(btn_sel){
-            if(freq_pos == 0) freq_scale = 0.1;
+            if(freq_pos == 0) freq_scale = 0.125;
             else if(freq_pos == 1) freq_scale = 0.25;
             else if(freq_pos == 2) freq_scale = 0.5;
             else freq_scale = 1;
