@@ -60,28 +60,11 @@ void menu(){
     }
 }
 
-void up_btn_task(){
-    if(freq_pos < 3) freq_pos++;
-    menu_queue.call(menu);
-}
-
-void down_btn_task(){
-    if(freq_pos > 0) freq_pos--;
-    menu_queue.call(menu);
-}
-
-void sel_btn_task(){
-    if(freq_pos == 0) freq_scale = 0.125;
-    else if(freq_pos == 1) freq_scale = 0.25;
-    else if(freq_pos == 2) freq_scale = 0.5;
-    else freq_scale = 1;
-    wave_queue.call(generate_wave);
-}
-
 void generate_wave(){
     int idx = 0;
     int flag = 0;
-
+    int i_store = 0;
+    int j_store = 1;
     while (1) {
         for (float i = 0.0f; i < wavelength_scale; i += len) {
             // aout = i * freq_scale;
@@ -92,12 +75,43 @@ void generate_wave(){
             }
             ThisThread::sleep_for(1ms);
         }
-        
-        if(freq_scale == 1) ThisThread::sleep_for(80ms);
-        else if(freq_scale == 0.5) ThisThread::sleep_for(160ms);
-        else if(freq_scale == 0.25) ThisThread::sleep_for(200ms);
-        else ThisThread::sleep_for(220ms);
 
+        if(freq_scale == 1){
+            for(int k = 0.0f; k < 80.0; k += 1.0){
+                aout = 1;
+                if(idx < sample){
+                    ADCdata[idx++] = ain;
+                }
+                ThisThread::sleep_for(1ms);
+            }
+        } 
+        else if(freq_scale == 0.5){
+            for(int k = 0.0f; k < 160.0; k += 1.0){
+                aout = 1;
+                if(idx < sample){
+                    ADCdata[idx++] = ain;
+                }
+                ThisThread::sleep_for(1ms);
+            }
+        }
+        else if(freq_scale == 0.25){
+            for(int k = 0.0f; k < 200.0; k += 1.0){
+                aout = 1;
+                if(idx < sample){
+                    ADCdata[idx++] = ain;
+                }
+                ThisThread::sleep_for(1ms);
+            }
+        }
+        else{
+            for(int k = 0.0f; k < 220.0; k += 1.0){
+                aout = 1;
+                if(idx < sample){
+                    ADCdata[idx++] = ain;
+                }
+                ThisThread::sleep_for(1ms);
+            }
+        }
         for (float j = wavelength_scale; j > 0.0f; j -= len){
             // aout = j * freq_scale;
             aout = j;
@@ -116,6 +130,24 @@ void generate_wave(){
             ThisThread::sleep_for(10ms); 
         }
     }
+}
+
+void up_btn_task(){
+    if(freq_pos < 3) freq_pos++;
+    menu_queue.call(menu);
+}
+
+void down_btn_task(){
+    if(freq_pos > 0) freq_pos--;
+    menu_queue.call(menu);
+}
+
+void sel_btn_task(){
+    if(freq_pos == 0) freq_scale = 0.125;
+    else if(freq_pos == 1) freq_scale = 0.25;
+    else if(freq_pos == 2) freq_scale = 0.5;
+    else freq_scale = 1;
+    wave_queue.call(generate_wave);
 }
 
 int main(void)
