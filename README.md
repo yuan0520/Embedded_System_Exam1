@@ -81,3 +81,15 @@
 <img src="https://i.imgur.com/KKh0nYO.png" width="50%" height="50%" />
 <br>
 <img src="https://i.imgur.com/qd60h2A.png" width="50%" height="50%" />
+
+---
+
+### If you can't open the circuit image file
+
+<img src="https://i.imgur.com/eJUPVvD.jpg" width="50%" height="50%" />
+<br><br>
+<img src="https://i.imgur.com/ks5253R.jpg" width="50%" height="50%" />
+<br><br>
+<img src="https://i.imgur.com/rgQpHfl.jpg" width="50%" height="50%" />
+<br><br>
+<img src="https://i.imgur.com/mRLXKWm.jpg" width="50%" height="50%" />
