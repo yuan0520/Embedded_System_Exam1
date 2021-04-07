@@ -12,8 +12,15 @@ InterruptIn btn_sel(D3);
 
 int sample = 1000;
 float ADCdata[1500];
+EventQueue menu_queue(32 * EVENTS_EVENT_SIZE);
+EventQueue wave_queue(32 * EVENTS_EVENT_SIZE);
+Thread menu_t;
+Thread wave_t;
 
-void menu(int freq_pos){
+int freq_pos = 3; // 0 -> 10Hz, 1 -> 25Hz, 2 => 50Hz, 3 -> 100Hz
+float freq_scale = 1; // default 100Hz
+
+void menu(){
     uLCD.color(BLACK);
     uLCD.locate(1, 2);
     uLCD.printf("\n1/8\n\n");
@@ -50,33 +57,59 @@ void menu(int freq_pos){
     }
 }
 
+void up_btn_task(){
+    if(freq_pos < 3) freq_pos++;
+    menu_queue.call(menu);
+}
+
+void down_btn_task(){
+    if(freq_pos > 0) freq_pos--;
+    menu_queue.call(menu);
+}
+
+void sel_btn_task(){
+    if(freq_pos == 0) freq_scale = 0.125;
+    else if(freq_pos == 1) freq_scale = 0.25;
+    else if(freq_pos == 2) freq_scale = 0.5;
+    else freq_scale = 1;
+    wave_queue.call(generate_wave);
+}
+
+void generate_wave(){
+
+}
+
 int main(void)
 {
-    int freq_pos = 3; // 0 -> 10Hz, 1 -> 25Hz, 2 => 50Hz, 3 -> 100Hz
-    float freq_scale = 1; // default 100Hz
+    menu_t.start(callback(&menu_queue, &EventQueue::dispatch_forever));
+    wave_t.start(callback(&wave_queue, &EventQueue::dispatch_forever));
+    btn_up.rise(&up_btn_task);
+    btn_down.rise(&down_btn_task);
+    btn_sel.rise(&sel_btn_task);
 
     uLCD.background_color(WHITE);
     uLCD.cls();
     uLCD.textbackground_color(WHITE);
-    menu(freq_pos);
+    menu();
 
-    while(1){
-        if(btn_up){
-            if(freq_pos < 3) freq_pos++;
-            menu(freq_pos);
-        }
-        if(btn_down){
-            if(freq_pos > 0) freq_pos--;
-            menu(freq_pos);
-        }
-        if(btn_sel){
-            if(freq_pos == 0) freq_scale = 0.125;
-            else if(freq_pos == 1) freq_scale = 0.25;
-            else if(freq_pos == 2) freq_scale = 0.5;
-            else freq_scale = 1;
-            break;
-        }
-    }
+    // while(1){
+    //     if(btn_up){
+    //         if(freq_pos < 3) freq_pos++;
+    //         menu(freq_pos);
+    //     }
+    //     if(btn_down){
+    //         if(freq_pos > 0) freq_pos--;
+    //         menu(freq_pos);
+    //     }
+    //     if(btn_sel){
+    //         if(freq_pos == 0) freq_scale = 0.125;
+    //         else if(freq_pos == 1) freq_scale = 0.25;
+    //         else if(freq_pos == 2) freq_scale = 0.5;
+    //         else freq_scale = 1;
+    //         break;
+    //     }
+    // }
+
 
     float wavelength_scale = 1 / freq_scale;
     float S = (1+0+7+0+6+0+0+0+2) % 10;
